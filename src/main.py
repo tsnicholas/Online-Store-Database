@@ -21,16 +21,15 @@ def insertData(collection : Collection, fileData : str | list):
         print(f"Failed to insert data into {collection.name}!")
 
 def main():
-    database = OnlineStore()
-    products = database.getCollection("Products")
+    onlineStore = OnlineStore()
+    products = onlineStore.database.get_collection("Products")
     file_data = getFileData("../Products.json")
     insertData(products, file_data)
-    users = database.getCollection("Users")
+    users = onlineStore.database.get_collection("Users")
     user = User()
-    if not database.dataExists(users, user.userData):
+    if not onlineStore.dataExists(users, user.userData):
         print("Adding user...")
-        insertData(users, user)
-    
+        insertData(users, user.userData) 
 
 if __name__ == '__main__':
     main()
