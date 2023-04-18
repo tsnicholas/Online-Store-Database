@@ -34,6 +34,6 @@ class testOnlineStore(unittest.TestCase):
             "phone number": "(666) 911-0420"
         }
         self.assertFalse(onlineStore.dataExists(users, fakeUser))
-
+    
 if __name__ == '__main__':
     unittest.main()

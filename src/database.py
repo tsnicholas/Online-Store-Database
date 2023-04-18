@@ -15,3 +15,10 @@ class OnlineStore:
                 output = output and instance[key] == data[key]
         return output
     
+    def insertData(self, collection : Collection, file : str):
+        if not self.dataExists(collection, file):
+            collection.insert_one(file)
+    
+    def insertMany(self, collection : Collection, files : list):
+        for file in files:
+            self.insertData(collection, file)
