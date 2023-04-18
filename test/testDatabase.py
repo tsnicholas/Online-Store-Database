@@ -7,8 +7,7 @@ from database import OnlineStore
 class testOnlineStore(unittest.TestCase):
     def test_init(self):
         onlineStore = OnlineStore()
-        expected = mongomock.MongoClient().get_database("OnlineStore").name
-        self.assertEqual(expected, onlineStore.database.name)
+        self.assertEqual("OnlineStore", onlineStore.database.name)
 
     def test_dataExists_TrueCase(self):
         onlineStore = OnlineStore()

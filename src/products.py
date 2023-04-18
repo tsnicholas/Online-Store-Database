@@ -7,3 +7,7 @@ class ProductStock:
 
     def getProductsIn(self, category : str) -> cursor:
         return self.products.find({"category": category})
+    
+    def getProductsWithId(self, id : int) -> cursor:
+        return self.products.find({"id": id})
+    
