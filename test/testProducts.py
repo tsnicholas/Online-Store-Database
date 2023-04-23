@@ -3,7 +3,7 @@ import mongomock
 import sys
 sys.path.append("../src")
 from products import ProductStock
-from main import JsonParser
+from jsonParser import JsonParser
 
 def define_test_collection():
     client = mongomock.MongoClient("mongodb://127.0.0.1:27017/")

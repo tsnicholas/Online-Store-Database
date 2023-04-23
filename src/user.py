@@ -1,10 +1,16 @@
-class User:
-    def __init__(self):
-        self.userData = self.parseUserData()
+from dataclasses import dataclass
 
-    def parseUserData(self):
-        userData = {}
-        columns = ["first name", "last name", "date of birth", "email", "phone number"]
-        for column in columns:
-            userData[column] = input(f"What's your {column}? ")
-        return userData
+@dataclass
+class User:
+    fname: str
+    lname: str
+    dob: str
+    email: str
+    pnumber: str
+    
+    def __init__(self, userData : dict):
+        self.fname = userData["first name"]
+        self.lname = userData["last name"]
+        self.dob = userData["date of birth"]
+        self.email = userData["email"]
+        self.pnumber = userData["phone number"]

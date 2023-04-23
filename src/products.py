@@ -3,11 +3,11 @@ from pymongo.collection import Collection
 
 class ProductStock:
     def __init__(self, products : Collection):
-        self.products = products
+        self.collection = products
 
     def getProductsIn(self, category : str) -> cursor:
-        return self.products.find({"category": category})
+        return self.collection.find({"category": category})
     
     def getProductsWithId(self, id : int) -> cursor:
-        return self.products.find({"id": id})
+        return self.collection.find({"id": id})
     
