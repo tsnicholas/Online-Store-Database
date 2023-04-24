@@ -1,5 +1,5 @@
 """Performs operations on the shopping cart collection of the online store database."""
-from collection import collection
+from data.collection import collection
 
 class ShoppingCart(collection):
     """Represents the cart collection of the database."""
@@ -17,3 +17,4 @@ class ShoppingCart(collection):
             insertion = product
             insertion["user"] = user
             self.collection.insert_one(insertion)
+            

@@ -1,5 +1,5 @@
 """Keeps track of the user's data by passing it into a data class."""
-from collection import collection
+from data.collection import collection
 
 class Users(collection):
     def insert_user(self, user : dict) -> None:

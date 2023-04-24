@@ -1,9 +1,9 @@
 """Provides the main functionality and user interaction of the project."""
 import pymongo
-from users import Users
-from json_parser import JsonParser
-from products import ProductStock
-from cart import ShoppingCart
+from data.users import Users
+from data.json_parser import JsonParser
+from data.products import ProductStock
+from data.cart import ShoppingCart
 
 EXIT_TERM = -1
 USER_DATA = {}
@@ -97,7 +97,7 @@ def main() -> None:
     users = Users(database["Users"])
     cart = ShoppingCart(database["ShoppingCart"])
     try:    
-        file_data = JsonParser.get_file_data("../Products.json")
+        file_data = JsonParser.get_file_data("Products.json")
         products.insert_products(file_data)
     except IOError:
         print("Warning: Couldn't find products.json. Products collection may be empty going forward.")

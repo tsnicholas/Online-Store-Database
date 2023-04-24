@@ -1,5 +1,5 @@
 """Has a class that deals with interactions to the product collection."""
-from collection import collection
+from data.collection import collection
 
 class ProductStock(collection):
     """Keeps track of the products collection and retrieves data from it."""
