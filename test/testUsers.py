@@ -2,8 +2,8 @@
 import unittest
 import mongomock
 import sys
-sys.path.append("../src")
-from user import Users
+sys.path.append("../")
+from data.users import Users
 
 def initialize_test_data() -> Users:
     client = mongomock.MongoClient("mongodb://127.0.0.1:27017/")

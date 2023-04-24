@@ -1,9 +1,8 @@
 import unittest
 import mongomock
 import sys
-from pymongo import cursor
-sys.path.append("../src")
-from cart import ShoppingCart
+sys.path.append("../")
+from data.cart import ShoppingCart
 
 def initialize_test_data() -> ShoppingCart:
     client = mongomock.MongoClient("mongodb://127.0.0.1:27017/")

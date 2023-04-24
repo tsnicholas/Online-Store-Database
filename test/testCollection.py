@@ -2,8 +2,8 @@
 import sys
 import unittest
 import mongomock
-sys.path.append("../src")
-from collection import collection
+sys.path.append("../")
+from data.collection import collection
 
 class TestCollection(unittest.TestCase):
     """Tests the collection class."""

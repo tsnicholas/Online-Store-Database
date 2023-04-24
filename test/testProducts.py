@@ -2,9 +2,9 @@
 import unittest
 import mongomock
 import sys
-sys.path.append("../src")
-from products import ProductStock
-from json_parser import JsonParser
+sys.path.append("../")
+from data.products import ProductStock
+from data.json_parser import JsonParser
 
 def define_test_collection():
     """Creates the test class for each test that's going to be ran."""
