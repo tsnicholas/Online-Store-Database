@@ -1,42 +1,42 @@
 """Provides the main functionality and user interaction of the project."""
-from user import User
-from collection import collection
+import pymongo
+from users import Users
 from json_parser import JsonParser
 from products import ProductStock
 from cart import ShoppingCart
 
 EXIT_TERM = -1
+USER_DATA = {}
+DATA_LIST = ["first name", "last name", "date of birth", "email", "phone number"]
+PNUMBER = 4
 
-def get_user_data() -> dict:
+def get_user_data() -> None:
     """Prompts the user for their information and returns the answers in a dictionary."""
-    user_data = {}
-    data_list = ["first name", "last name", "date of birth", "email", "phone number"]
-    for data in data_list:
-        user_input = input(f"What's your {data}? ")
-        user_data[data] = user_input
-    return user_data
+    for data in DATA_LIST:
+        USER_DATA[data] = input(f"What's your {data}? ")
 
-def main_menu(onlineStore : collection, products : ProductStock, user : User) -> None:
+def main_menu(cart : ShoppingCart, products : ProductStock) -> None:
     """Serves as the main menu for the user by prompting them their options for the program."""
     user_input = 0
-    cart = ShoppingCart(onlineStore.database["ShoppingCart"])
     while user_input != EXIT_TERM:
         try:
-            user_input = int(input("What would you like to do?\n1. Shop for products.\n2. View your current cart.\n"
+            user_input = int(input("What would you like to do?\n1. Shop for products.\n2. View your current cart.\n3. Delete from your cart.\n"
                                    f"(Type {EXIT_TERM} to quit) "))
             match user_input:
                 case -1:
                     break
                 case 1:
-                    shopping(cart, products, user)
+                    shopping(cart, products)
                 case 2:
-                    view_cart(cart, user)
+                    view_cart(cart)
+                case 3:
+                    delete_from_cart(cart)
                 case _:
                     print("Not an option. Please try again.")
         except TypeError:
             print("Not an integer. Please try again.")
 
-def shopping(cart : ShoppingCart, products : ProductStock, user : User) -> None:
+def shopping(cart : ShoppingCart, products : ProductStock) -> None:
     """Prompts the user for a category to select a product from and then gets their selection."""
     category = ""
     while True:
@@ -45,7 +45,7 @@ def shopping(cart : ShoppingCart, products : ProductStock, user : User) -> None:
             break
         product_list = products.get_products_in(category)
         print_products(product_list)
-        cart.insert_into_cart(user.pnumber, get_selection(product_list))
+        cart.insert_into_cart(USER_DATA[DATA_LIST[PNUMBER]], get_selection(product_list))
 
 def print_products(product_list : list[dict]) -> None:
     """Prints the id and title of a product for the user."""
@@ -71,26 +71,40 @@ def get_selection(product_list : list[dict]) -> list[dict]:
             print("Not an integer. Please try again.")
     return selection
 
-def view_cart(cart : ShoppingCart, user : User) -> None:
-    user_cart = cart.get_user_cart(user.pnumber)
-    print(f"{user.fname} {user.lname}'s cart: ")
+def view_cart(cart : ShoppingCart) -> None:
+    """Displays all the products within the user's cart."""
+    user_cart = cart.get_user_cart(USER_DATA[DATA_LIST[PNUMBER]])
+    print(f"{USER_DATA[DATA_LIST[0]]} {USER_DATA[DATA_LIST[1]]}'s cart: ")
     for product in user_cart:
         print(f"id: {product['id']}, title: {product['title']}, category: {product['category']}, price: {product['price']}.")
 
+def delete_from_cart(cart : ShoppingCart) -> None:
+    """Deletes products from the user's cart."""
+    while True:    
+        try:
+            product_id = int(input(f"What's the id of the product you'd like to delete? (Type {EXIT_TERM} to quit) "))
+            if product_id == EXIT_TERM:
+                break
+            cart.delete_from_cart(product_id, USER_DATA[DATA_LIST[PNUMBER]])
+            print("Successfully deleted from cart.")
+        except TypeError:
+            print("Not an integer. Please try again.")
+
 def main() -> None:
-    """The main function that initializes everything at the beginning"""
-    online_store = collection()
-    products = ProductStock(online_store.database["Products"])
+    """The main function that initializes everything at the beginning."""
+    database = pymongo.MongoClient("mongodb://127.0.0.1:27017/")["OnlineStore"]
+    products = ProductStock(database["Products"])
+    users = Users(database["Users"])
+    cart = ShoppingCart(database["ShoppingCart"])
     try:    
         file_data = JsonParser.get_file_data("../Products.json")
-        online_store.insert_many(products.collection, file_data)
+        products.insert_products(file_data)
     except IOError:
-        print("Error: Couldn't find products.json")
+        print("Warning: Couldn't find products.json. Products collection may be empty going forward.")
     finally:
-        user_data = get_user_data()
-        online_store.insert_one(online_store.database["Users"], user_data)
-        user = User(user_data)
-        main_menu(online_store, products, user)
+        get_user_data()
+        users.insert_user(USER_DATA)
+        main_menu(cart, products)
 
 if __name__ == '__main__':
     main()
