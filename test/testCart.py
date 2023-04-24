@@ -42,5 +42,20 @@ class TestShoppingCart(unittest.TestCase):
         cart.delete_from_cart(3, "(317) 993-8411")
         self.assertListEqual(expected, delete_randomized_id(cart.collection.find({"user": "(317) 993-8411"})))
 
+    def test_insert_into_cart_one_case(self):
+        cart = initialize_test_data()
+        expected = [{"id": 2, "title": "Skinny Jeans", "user": "(317) 856-2377"}, 
+                    {"id": 4, "title": "Almond Milk", "user": "(317) 856-2377"}]
+        cart.insert_into_cart("(317) 856-2377", [{"id": 4, "title": "Almond Milk"}])
+        self.assertListEqual(expected, delete_randomized_id(cart.collection.find({"user": "(317) 856-2377"})))
+
+    def test_insert_into_cart_many_case(self):
+        cart = initialize_test_data()
+        expected = [{"id": 2, "title": "Skinny Jeans", "user": "(317) 856-2377"},
+                    {"id": 3, "title": "Rick and Morty Box Set", "user": "(317) 856-2377"},
+                    {"id": 4, "title": "Almond Milk", "user": "(317) 856-2377"}]
+        cart.insert_into_cart("(317) 856-2377", [{"id": 3, "title": "Rick and Morty Box Set"}, {"id": 4, "title": "Almond Milk"}])
+        self.assertListEqual(expected, delete_randomized_id(cart.collection.find({"user": "(317) 856-2377"})))
+
 if __name__ == '__main__':
     unittest.main()

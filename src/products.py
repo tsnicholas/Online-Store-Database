@@ -7,11 +7,17 @@ class ProductStock:
     def __init__(self, products : Collection):
         self.collection = products
 
-    def get_products_in(self, category : str) -> cursor:
-        """Retrieve products in a specified category."""
-        return self.collection.find({"category": category})
-    
-    def get_products_with_id(self, id : int) -> cursor:
-        """Retrieve products with a specific id."""
-        return self.collection.find({"id": id})
-    
+    @staticmethod
+    def convert_cursor_to_list(cursor : cursor):
+        output = []
+        for product in cursor:
+            output.append(product)
+        return output
+
+    def get_products_in(self, category : str) -> list[dict]:
+        """Retrieve products in a specified category and return it as a list of dictionaries."""
+        return self.convert_cursor_to_list(self.collection.find({"category": category}))
+        
+    def get_products_with_id(self, id : int) -> list[dict]:
+        """Retrieve products with a specific id and return it as a list of dictionaries."""
+        return self.convert_cursor_to_list(self.collection.find({"id": id}))
