@@ -20,7 +20,7 @@ def main_menu(cart : ShoppingCart, products : ProductStock) -> None:
     user_input = 0
     while user_input != EXIT_TERM:
         try:
-            user_input = int(input("What would you like to do?\n1. Shop for products.\n2. View your current cart.\n3. Delete from your cart.\n"
+            user_input = int(input("What would you like to do?\n1. Shop for products.\n2. View your order summary.\n3. Delete from your cart.\n"
                                    f"(Type {EXIT_TERM} to quit) "))
             match user_input:
                 case -1:
@@ -28,7 +28,7 @@ def main_menu(cart : ShoppingCart, products : ProductStock) -> None:
                 case 1:
                     shopping(cart, products)
                 case 2:
-                    view_cart(cart)
+                    order_summary(cart)
                 case 3:
                     delete_from_cart(cart)
                 case _:
@@ -71,12 +71,12 @@ def get_selection(product_list : list[dict]) -> list[dict]:
             print("Not an integer. Please try again.")
     return selection
 
-def view_cart(cart : ShoppingCart) -> None:
+def order_summary(cart : ShoppingCart) -> None:
     """Displays all the products within the user's cart."""
     user_cart = cart.get_user_cart(USER_DATA[DATA_LIST[PNUMBER]])
     print(f"{USER_DATA[DATA_LIST[0]]} {USER_DATA[DATA_LIST[1]]}'s cart: ")
     for product in user_cart:
-        print(f"id: {product['id']}, title: {product['title']}, category: {product['category']}, price: {product['price']}.")
+        print(f"id: {product['id']}, title: {product['title']}, category: {product['category']}, price: {product['price']}, rating: {product['rating']['rate']}.")
 
 def delete_from_cart(cart : ShoppingCart) -> None:
     """Deletes products from the user's cart."""
